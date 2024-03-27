@@ -1,46 +1,49 @@
 # Resource Group
 resource "azurerm_resource_group" "network_pro"  {
-  name = var.networking-resource-group
-  location = "UK South"
+  name = var.resource_group_name
+  location = var.location
+
   
 }
 
 # Virtual Network
 resource "azurerm_virtual_network"  "my_ask_net" {
   name                = "ask-vnet"
-  address_space       = ["10.0.0.0/16"]
-  location            = "azurerm_resource_group.network_pro.location"
-  resource_group_name = "azurerm_resource_group_network_pro.name"
+  address_space       = var.vnet_address_space
+  resource_group_name = var.resource_group_name
+  location            = var.location
+ # vnet_id             = azurerm_virtual_network.my_ask_net.id
 }
 
 # Subnet 1
 resource "azurerm_subnet" "ask_subnet_1" {
-  name                 = "control-panel-subnet"
-  virtual_network_name = azurerm_virtual_network.my_ask_net.name
-  resource_group_name  = "azurerm_resource_group.network_pro.name"
-  resource_group_location = "azurerm_resource_group.network_pro.location"
-  address_prefixes     = ["10.0.0.0/24"]
-
+  name                    = "control-panel-subnet"
+  virtual_network_name    = azurerm_virtual_network.my_ask_net.name
+  resource_group_name     = var.resource_group_name
+  address_prefixes        = var.dns_prefix
+  control-panel-subnet_id = azurerm_subnet.ask_subnet_1.id
+  control-panel-subnet    = azurerm_subnet.ask_subnet_1.name
+  networking_resource_group_Name = var.networking_resource_group_Name
+  
 }
 
 # Subnet 2
 resource "azurerm_subnet" "ask_subnet_2" {
   name                 = "work-node-subnet"
-  virtual_network_name = azurerm_virtual_network.my_ask_net.name
-  resource_group_name  = "azurerm_resource_group.network_pro.name"
-  resource_group_location = "azurerm_resource_group.network_pro.location"
-  address_prefixes     = ["10.0.1.0/24"]
-
+  virtual_network_name = var.resource_group_name
+  resource_group_name  = azurerm_resource_group.network_pro.name
+  address_prefixes     = var.dns_prefix
+  work-node-subnet_id  = azurerm_subnet.ask_subnet_2.id
+  
+  
 }
 
 resource "azurerm_network_security_group"  "nsg" {
     name                  = "ask-nsg"
-    location              = "azurerm_resource_group.network_pro.location"
-    resource_group_name   = "azurerm_resource_group.network_pro.name"
-    kube-apiserver        = "kube-apiserver-rule"  
-    SSH_traffic           = "ssh-rule"
-    direction             = "Inbound" 
+    resource_group_name   = var.resource_group_name
+    location              = var.location
 
+    
   
 }
 

@@ -9,37 +9,69 @@ variable "client_id" {
   sensitive = true
 }
 variable "resource_group_name" {
+  type = string
   description = "The name of the created resource group."
-  #default       = azurerm_resource_group.name
+
 }
+
+variable "location" {
+  type        = string
+  description = "Region"
+}
+
+variable "vm_size" {
+  type        = string
+  description = "Size of VM"
+}
+# Virtual Network Address
+variable "vnet_address_space" {
+  type        = list(string)
+  description = "Virtual Network CIDR"
+  default     = ["10.163.0.0/16"]  
+}
+
 
 variable "vnet_id" {
+  type = string
   description = "The id of the created virtual network."
-  #default       = azurerm_virtual_network.my_terraform_network.id
+
 }
 
-variable "control_plane_subnet_id" {
+variable "control_plane_subnet" {
+  type = string
   description = "The name of the created subnet 1."
- # default       = azurerm_subnet.my_terraform_subnet_1.control_plane_subnet_id
+
 }
 
-variable "worker_node_subnet_id" {
+variable "worker_node_subnet" {
+  type = string
   description = "The name of the created subnet 2."
-  #default       =      azurerm_subnet.my_terraform_subnet_2.worker_node_subnet_id 
+  
 }
 variable "networking_resource_group_Name" {
+  type = string
   description = "The name of the created subnet 2."
-  #default       = azurerm_resource_group.name
+ 
 }
-variable "aks_nsg_id" {
+variable "aks_nsg" {
+  type = string
   description = "The name of the aks-nsg."
-  #default       = azurerm_network_security_group.ask_nsg_id 
+  
 } 
 
 variable "dns_prefix"{
-  description = "The name of DNS"
   type = string
-}  
+  description = "The name of DNS"
   
+}  
+variable "aks_cluster_name" {
+  type        = string
+  description = "The name of ASK cluster"
 
+}
 
+variable "kubernetes_version" {
+   type        = string
+   description = "Kebernetes version" 
+
+} 

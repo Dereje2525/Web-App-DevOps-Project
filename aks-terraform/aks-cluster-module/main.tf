@@ -1,17 +1,20 @@
+
 resource "azurerm_resource_group" "cluster_pro" {
   name     = "myclusterresourcegroup"
   location = "UK South"
  
 }
 
-resource "azurerm_kubernetes_cluster" "claster_name" {
-  location            = azurerm_resource_group.cluster_pro.location
-  name                = "My-terraform-aks-cluster"
-  resource_group_name = "azurerm_resource_group.cluster_pro.name"
-  dns_prefix          = "myaks-project"
+resource "azurerm_kubernetes_cluster" "ask-cluster" {
+  location            = var.location
+  name                = var.aks_cluster_name
+  resource_group_name = var.resource_group_name
+  dns_prefix          = var.dns_prefix
+  kubernetes_version  = var.kubernetes_version
   default_node_pool {
-   name       = "agentpool"
-   vm_size    = "Standard_D2_v2"
+  name       = "agentpool"
+  vm_size    = var.vm_size
+
 
   } 
  }
