@@ -2,13 +2,13 @@
 variable "cluster_location" {
   type        = string
   description = "Location of resource groupr"
-  default     = "UK South"
+
 }
 
 variable "location" {
   type        = string
   description = "Location of resource groupr"
-  default     = "UK South"
+
 }
 
 variable "aks_cluster_name" {
@@ -20,14 +20,14 @@ variable "aks_cluster_name" {
 variable "dns_prefix" {
    type        = string
    description = "DNS prefix of cluster"
-   default     = "myaks-project"
+
 
 }
 
 variable "kubernetes_version" {
    type        = string
    description = "Kebernetes version" 
-   default     = "1.26.6"
+
 
 } 
 
@@ -66,19 +66,8 @@ variable "worker_node_subnet_id" {
   
 }
 
-variable "aks_nsg_id" {
-  type = string
-  description = "The ID of the aks-nsg."
- 
-}
-
-  
-# Size of worker nodes
 variable "vm_size" {
-  type        = string
-  description = "vm size"
-}
-variable "address_space" {
-  type        = list(string)
-  description = "CIDR of the vnet"
+  type =string
+  description = "The Virtul Machine Size."
+  
 }

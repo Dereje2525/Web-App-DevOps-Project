@@ -7,33 +7,29 @@ resource "azurerm_resource_group" "network_pro"  {
 }
 
 # Virtual Network
-resource "azurerm_virtual_network"  "my_ask_net" {
+resource "azurerm_virtual_network"  "vnet" {
   name                = "ask-vnet"
   address_space       = var.vnet_address_space
   resource_group_name = var.resource_group_name
   location            = var.location
- # vnet_id             = azurerm_virtual_network.my_ask_net.id
+
 }
 
 # Subnet 1
 resource "azurerm_subnet" "ask_subnet_1" {
-  name                    = "control-panel-subnet"
-  virtual_network_name    = azurerm_virtual_network.my_ask_net.name
+  name                    = "control_plane_subnet_name"
+  virtual_network_name    = azurerm_virtual_network.vnet.name
   resource_group_name     = var.resource_group_name
-  address_prefixes        = var.dns_prefix
-  control-panel-subnet_id = azurerm_subnet.ask_subnet_1.id
-  control-panel-subnet    = azurerm_subnet.ask_subnet_1.name
-  networking_resource_group_Name = var.networking_resource_group_Name
-  
+  address_prefixes        = var.subnet_address_space
+
 }
 
 # Subnet 2
 resource "azurerm_subnet" "ask_subnet_2" {
-  name                 = "work-node-subnet"
-  virtual_network_name = var.resource_group_name
-  resource_group_name  = azurerm_resource_group.network_pro.name
-  address_prefixes     = var.dns_prefix
-  work-node-subnet_id  = azurerm_subnet.ask_subnet_2.id
+  name                 = "worker_node_subnet_name"
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  resource_group_name  = var.resource_group_name
+  address_prefixes    = var.subnet_address_space
   
   
 }

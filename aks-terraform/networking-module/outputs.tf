@@ -5,7 +5,7 @@ output "networking_resource_group_name" {
 
 output "vnet_id" {
   description = "The ID of the created virtual network."
-  value       =  azurerm_virtual_network.my_ask_net.id
+  value       =  azurerm_virtual_network.vnet.id
 }
 
 output "control_plane_subnet_id" {
@@ -18,11 +18,6 @@ output "worker_node_subnet_id" {
   value       =  azurerm_subnet.ask_subnet_2.id
 }
 
-# resourcec group name
-output "resource_group_name" {
-  value       = azurerm_resource_group.network_pro.name
-  description = "Resource group name"
-}
 output "aks_nsg_id" {
   description = "The ID of the aks-nsg."
   value       = azurerm_network_security_group.nsg.id
