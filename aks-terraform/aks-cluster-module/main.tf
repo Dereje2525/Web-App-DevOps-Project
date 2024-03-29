@@ -17,8 +17,8 @@ resource "azurerm_kubernetes_cluster" "ask-cluster" {
   } 
  
  service_principal{
- client_id = var.service_principal_client_id
- client_secret = var.service_principal_client_secret
+ client_id = "8aab71e6-c7bc-4c6a-a108-5c44ebfd38a3"
+ client_secret = "5HP8Q~mh1zuhmruko6HJv1wlGVGUysBYb.LOWaxz"
  }
 }
 

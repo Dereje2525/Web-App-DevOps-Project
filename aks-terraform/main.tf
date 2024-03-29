@@ -46,8 +46,8 @@ module "aks_cluster" {
   cluster_location     = "UK South"
   aks_cluster_name     = "terraform-aks-cluster"
   kubernetes_version   = "1.26.6"
-  service_principal_client_id       = var.client_id
-  service_principal_client_secret   = var.client_secret
+  service_principal_client_id = var.client_id
+  service_principal_client_secret = var.client_secret
   resource_group_name               = module.networking.networking_resource_group_name
   control_plane_subnet_id           = module.networking.control_plane_subnet_id
   worker_node_subnet_id             = module.networking.worker_node_subnet_id
