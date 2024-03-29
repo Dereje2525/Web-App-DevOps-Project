@@ -58,6 +58,16 @@ CMD ["python", "app.py"]
 # Create Terraform Project  and Modules
 
 ## Defining a Network Module
+
+In this module we will define Azure Networking components using Terraform.
+
+We will follow the following steps to create a virtual network using Terraform.
+
+1. We define the configuration of our Virtual Network using the azurerm_virtual_network resource block
+2. We will define the subnets associated with the virtual network using the azurerm_subnet resource block.
+3. we define Network Security Groups (NSGs) using Terraform's azurerm_network_security_group resource block
+4. We will first define a Terraform configuration file (main.tf) that defines a VNet in Azure:
+
 ### Inpus Variable
 variable "resource_group_name" {
   description = "The name of the created resource group."
@@ -74,37 +84,33 @@ variable "control_plane_subnet" {
    type        = string
 }
 
-variable "worker_node_subnet" {
-  description = "The name of the created subnet 2."
+
+variable "resource_group_name" {
+  description = "The name of the created resource group."
   type        = string
 }
-variable "networking_resource_group_Name" {
-  description = "The name of the created subnet 2."
 
-}
-variable "aks_nsg" {
-  description = "The name of the aks-nsg."
-  type        = string
-} 
-
-variable "address_space" {
+variable "vnet_address_space" {
   type        = list(string)
-  description = "CIDR of the vnet"
+  description = "Address space  of the vnet"
 }
 
+variable "subnet_address_space" {
+  type        = list(string)
+  description = "Address space of the subnet"
+}
   
 variable "location" {
   description = "Location of resource group"
   type = string
   
 }  
-variable "kubernetes_version" {
-  description = "The kubernetes_version"
-  type = string
-  default = "1.26.6"
-}   
 
 ### Output Variable
+output "networking_resource_group_name" {
+  description = "The name of the created resource group."
+  value       = azurerm_resource_group.network_pro.name 
+}
 output "networking_resource_group_name" {
   description = "The name of the created resource group."
   value       = azurerm_resource_group.network_pro.name 
@@ -112,7 +118,7 @@ output "networking_resource_group_name" {
 
 output "vnet_id" {
   description = "The ID of the created virtual network."
-  value       =  azurerm_virtual_network.my_ask_net.id
+  value       =  azurerm_virtual_network.vnet.id
 }
 
 output "control_plane_subnet_id" {
@@ -125,19 +131,34 @@ output "worker_node_subnet_id" {
   value       =  azurerm_subnet.ask_subnet_2.id
 }
 
-
 output "resource_group_name" {
-  value       = azurerm_resource_group.rg-name.name
-  description = "Resource group name"
+  description = "Name of the Azure Resource Group for networking resources."
+  value       = azurerm_resource_group.network_pro.name
 }
 output "aks_nsg_id" {
-  description = "The ID of the aks-nsg."
+  description = "ID of the Network Security Group (NSG) for AKS."
   value       = azurerm_network_security_group.nsg.id
-  
-} 
+}
 
 ## Defining an ASK Cluster with IaC
+In this module we will define the Terraform configuration for creating an AKS cluster.
+We will create the following files :variables.tf outputs.tf.tf and main.tf
+We will use the following input variables to configure and create the AKS cluster resources in the main.tf file.
+
+1. The aks_cluster_name variable specifies the name of the AKS cluster that will be created
+2. The cluster_location defines the Azure region where the AKS cluster will be created
+3. The dn_prefix sets the DNS prefix for the AKS cluster, which is used to create a unique DNS name for the cluster
+4. The kubernetes_version specifies the version of Kubernetes to be used for the AKS cluster
+5. The service_principal_client_id is the Client ID of the service principal used for authenticating and managing the AKS cluster
+6. The service_principal_client_secret specifies the Client Secret associated with the service principal used for AKS cluster 
+
 ### Input Variable
+variable "cluster_location" {
+  type        = string
+  description = "Location of resource groupr"
+
+}
+
 variable "location" {
   type        = string
   description = "Location of resource groupr"
@@ -154,33 +175,35 @@ variable "dns_prefix" {
    type        = string
    description = "DNS prefix of cluster"
 
+
 }
 
 variable "kubernetes_version" {
    type        = string
    description = "Kebernetes version" 
 
+
 } 
 
 variable "service_principal_client_id" {
-  type =string
+  type = string
   description = "service principal client ID"
 
 }
-variable "service_principal_secret" {
-  type =string
+variable "service_principal_client_secret" {
+  type = string
   description = "service principal client Secret"
 
- }
+}
 
 variable "resource_group_name" {
-  type =string
+  type = string
   description = "The name of the created resource group."
 
 }
 
 variable "vnet_id" {
-  type =string
+  type = string
   description = "The id of the created virtual network."
   
 }
@@ -192,94 +215,111 @@ variable "control_plane_subnet_id" {
 }
 
 variable "worker_node_subnet_id" {
-  type =string
+  type = string
   description = "The ID of the created subnet 2."
   
 }
 
-variable "aks_nsg_id" {
-  type =string
-  description = "The name of the aks-nsg."
- 
+variable "vm_size" {
+  type = string
+  description = "The Virtul Machine Size."
+  
 }
 
-variable "vm_size" {
-  type        = string
-  description = "vm size"
-}
-variable "address_space" {
-  type        = list(string)
-  description = "CIDR of the 
-}
+
+
 ### Output Variable
 output "ask_cluster_name" {
   description = "The name of provisioned cluster."
   value = azurerm_kubernetes_cluster.ask-cluster.name
 }
 
-output
- "ask_cluster-id" {
+
+output "ask_cluster_name" {
+  description = "The name of provisioned cluster."
+  value = azurerm_kubernetes_cluster.ask-cluster.name
+}
+
+
+output "ask_cluster-id" {
   description = "ID of the AKS Cluster"
   value = azurerm_kubernetes_cluster.ask-cluster.id
 }
 
-resource "local_file" "kubeconfig" {
-  depends_on = [azurerm_kubernetes_cluster.aks-cluster]
-  filename   = "kubeconfig"
-  content    = azurerm_kubernetes_cluster.aks-cluster.kube_config_raw
+output "aks_kubeconfig" {
+  description = "Kubeconfig file for accessing the AKS cluster."
+  value       = azurerm_kubernetes_cluster.ask-cluster.kube_config_raw
 }
 
 
 
 # Define The project main configuration.
+ We will define the main configuration for your project, and we use  the networking module and the AKS cluster module to provision the necessary Azure resources.
+
+ We will use variables for client_id which is the access key for the provider" and client_secret which is the secret key for the provider, which we will store in environment variables to avoid encoding them.
+ We will use the network module to provide the necessary network resources for your AKS cluster and we will also use the AKS cluster module to define and provision your AKS cluster as shown in the main.tf file.
+
 ## Creating a main.tf 
 
+# Configure the Microsoft Azure Provider
+
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=3.0.0"
+    }
+  }
+}
 
 provider "azurerm" {
   
   features {}
   
-    client_id          = "${var.client_id}"
-    client_secret      = "${var.client_secret}"
- 
-
-
+    client_id          = var.client_id
+    client_secret      = var.client_secret
+    subscription_id    = "dfe66b53-7ab5-4f19-8786-668ac367b573"
+    tenant_id          = "47d4542c-f112-47f4-92c7-a838d8a5e8ef"
   
-}  
-module "networking-module" {
+
+   
+}
+ 
+  
+ 
+module "networking" {
 
   source  = "./networking-module"
  
-  resource_group_name   = var.resource_group_name
-  location              = var.location
-  address_space         = var.vnet_address_space
-  vnet_id               = var.vnet_id
-  control_plane_subnet  = var.control_plane_subnet
-  worker_node_subnet    = var.worker_node_subnet
-  aks_nsg               = azurerm_network_security_group.nsg.name
-  networking_resource_group_Name = var.networking_resource_group_Name
+  resource_group_name         = "networking-resource-group"
+  location                    = "UK South"
+  vnet_address_space          = ["10.10.0.0/16"]
+  subnet_address_space        = ["10.0.1.0/24"]
+  
+
+
   
 }
  
-module "cluster-module" {
+module "aks_cluster" {
  
-  source  = "./aks-cluster-module"
-  location = var.location
-  aks_cluster_name = var.aks_cluster_name
-  service_principal_client_id = var.client_id
-  service_principal_secret    = var.client_secret
-  resource_group_name = module.networking-module.resource_group_name
-  vm_size               = var.vm_size
-  address_space         = var.vnet_address_space
-  control_plane_subnet_id = module.networking-module.azurerm_subnet.ask_subnet_1.id
-  worker_node_subnet_id = module.networking-module.azurerm_subnet.ask_subnet_2.id
-  kubernetes_version    = var.kubernetes_version
-  aks_nsg_id            = var.aks_nsg_id
-  dns_prefix            = var.dns_prefix
-  vnet_id               = module.networking-module.azurerm_virtual_network.my_ask_net.id
+  source               = "./aks-cluster-module"
+  location             = "UK South"
+  cluster_location     = "UK South"
+  aks_cluster_name     = "terraform-aks-cluster"
+  kubernetes_version   = "1.26.6"
+  service_principal_client_id       = var.client_id
+  service_principal_client_secret   = var.client_secret
+  resource_group_name               = module.networking.networking_resource_group_name
+  control_plane_subnet_id           = module.networking.control_plane_subnet_id
+  worker_node_subnet_id             = module.networking.worker_node_subnet_id
+  dns_prefix            = "myaks-project"
+  vnet_id               = module.networking.control_plane_subnet_id
+  vm_size               = "Standard_DS1_v2"
  
 }
- 
+
+
 
 
 # Kebernetes Deployment to ASK

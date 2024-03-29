@@ -11,13 +11,9 @@ output "ask_cluster-id" {
   value = azurerm_kubernetes_cluster.ask-cluster.id
 }
 
+output "aks_kubeconfig" {
+  description = "Kubeconfig file for accessing the AKS cluster."
+  value       = azurerm_kubernetes_cluster.ask-cluster.kube_config_raw
+}
 
-
-# kubeconfig file
-
-#resource "local_file" "kubeconfig" {
- # depends_on = [azurerm_kubernetes_cluster.aks-cluster]
- # filename   = "kubeconfig"
- # content    = azurerm_kubernetes_cluster.aks-cluster.kube_config_raw
-#}
 
