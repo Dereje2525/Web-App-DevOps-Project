@@ -26,3 +26,4 @@ output "aks_nsg_id" {
   description = "ID of the Network Security Group (NSG) for AKS."
   value       = azurerm_network_security_group.nsg.id
 }  
+
