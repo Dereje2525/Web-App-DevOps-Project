@@ -1,31 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: flask-app-deployment
   labels:
-    app: nginx
+    app: flask-app
 spec:
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
   selector:
     matchLabels:
-      app: nginx
+      app: flask-app
   template:
     metadata:
       labels:
-        app: nginx
+        app: flask-app
     spec:
       containers:
-      - name: nginx
+      - name: mycontainername
         image: dere230/webapp 1.0.0
         ports:
-        - containerPort: 80
+        - containerPort: 5000
 
 ---
-# Cluster IP
+
 apiVersion: v1
-
 kind: Service
-
 metadata:
   name: flask-app-service 
 spec:
@@ -35,3 +38,4 @@ spec:
   ports:
     - port: 80
       targetPort: 5000
+      protocol:   TCP

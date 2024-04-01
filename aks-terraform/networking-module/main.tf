@@ -8,9 +8,9 @@ resource "azurerm_resource_group" "network_pro"  {
 # Virtual Network
 resource "azurerm_virtual_network"  "vnet" {
   name                = "ask-vnet"
-  address_space       = var.vnet_address_space
   resource_group_name = azurerm_resource_group.network_pro.name
   location            = azurerm_resource_group.network_pro.location
+  address_space       = ["10.0.0.0/16"]
 
 }
 
