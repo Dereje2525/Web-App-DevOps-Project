@@ -322,7 +322,11 @@ module "aks_cluster" {
 
 
 
-# Kebernetes Deployment to ASK
+# ![alt text](image-2.png)
+
+
+
+
 # CI/CD Pipeline With Azure DevOP  
  
 

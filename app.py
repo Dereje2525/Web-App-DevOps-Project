@@ -5,6 +5,21 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 import pyodbc
 import os
+from azure.identity import ManagedIdentityCredential
+from azure.keyvault.secrets import SecretClient
+# retrieve secrets from Azure Key Vault using Managed Identity for AKS
+key_vault_url = "https://mydevopkey.vault.azure.net/"
+
+# Set up Azure Key Vault client with Managed Identity
+credential = ManagedIdentityCredential()
+secret_client = SecretClient(vault_url=key_vault_url, credential=credential)
+
+# Access the secret values from Key Vault
+secret = secret_client.get_secret("test1")
+
+# Access the secret values
+secret_value = secret.value
+
 
 # Initialise Flask App
 app = Flask(__name__)
@@ -15,6 +30,7 @@ database = 'orders-db'
 username = 'maya'
 password = 'AiCore1237'
 driver= '{ODBC Driver 18 for SQL Server}'
+
 
 # Create the connection string
 connection_string=f'Driver={driver};\
