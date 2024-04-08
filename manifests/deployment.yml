@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: dere230webapplatest 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dere230webapplatest
+  template:
+    metadata:
+      labels:
+        app: dere230webapplatest 
+    spec:
+      containers:
+        - name: dere230webapplatest 
+          image: derecontainerregistry.azurecr.io/dere230webapplatest
+          ports:
+          - containerPort: 3000
