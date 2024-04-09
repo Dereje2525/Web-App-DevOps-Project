@@ -11,7 +11,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '0a8c7c1b-f652-4685-aef8-fa5f25df0c92'
-  imageRepository: 'dere230webapplatest'
+  imageRepository: 'dere230webapp:latest'
   containerRegistry: 'derecontainerregistry.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/dockerfile'
   tag: '$(Build.BuildId)'
