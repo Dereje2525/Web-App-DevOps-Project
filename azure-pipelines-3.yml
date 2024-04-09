@@ -17,3 +17,9 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Dereje Debela DevOps(dfe66b53-7ab5-4f19-8786-668ac367b573)'
+    KeyVaultName: 'MyDevopkey'
+    SecretsFilter: '*'
+    RunAsPreJob: false
