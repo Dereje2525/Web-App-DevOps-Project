@@ -1,12 +1,3 @@
-# Docker
-- task: AzureKeyVault@2
-  inputs:
-    azureSubscription: 'Dereje Debela DevOps(dfe66b53-7ab5-4f19-8786-668ac367b573)'
-    KeyVaultName: 'MyDevopkey'
-    SecretsFilter: '*'
-    RunAsPreJob: false
-# Build and push an image to Azure Container Registry
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
 - main
@@ -24,7 +15,15 @@ variables:
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
-
+# Docker
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Dereje Debela DevOps(dfe66b53-7ab5-4f19-8786-668ac367b573)'
+    KeyVaultName: 'MyDevopkey'
+    SecretsFilter: '*'
+    RunAsPreJob: false
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 stages:
 - stage: Build
   displayName: Build and push stage
