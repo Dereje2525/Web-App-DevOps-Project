@@ -36,6 +36,12 @@ stages:
         azureResourceGroup: 'networking-resource-group'
         kubernetesCluster: 'terraform-aks-cluster'
         manifests: 'application-manifest.yaml'   
+    - task: AzureKeyVault@2
+      inputs:
+        azureSubscription: 'Dereje Debela DevOps(dfe66b53-7ab5-4f19-8786-668ac367b573)'
+        KeyVaultName: 'MyDevopkey'
+        SecretsFilter: '*'
+        RunAsPreJob: false        
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
