@@ -1,10 +1,5 @@
 # Deploy to Azure Kubernetes Service
-- task: AzureKeyVault@2
-  inputs:
-    azureSubscription: 'Dereje Debela DevOps(dfe66b53-7ab5-4f19-8786-668ac367b573)'
-    KeyVaultName: 'MyDevopkey'
-    SecretsFilter: '*'
-    RunAsPreJob: false
+
 # Build and push image to Azure Container Registry; Deploy to Azure Kubernetes Service
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
@@ -70,7 +65,12 @@ stages:
               action: createSecret
               secretName: $(imagePullSecret)
               dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
-
+          - task: AzureKeyVault@2
+            inputs:
+              azureSubscription: 'Dereje Debela DevOps(dfe66b53-7ab5-4f19-8786-668ac367b573)'
+              KeyVaultName: 'MyDevopkey'
+              SecretsFilter: '*'
+              RunAsPreJob: false
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
